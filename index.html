@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I am so sorry Sanumma! 🥺❤️</title>
+    <!-- Tailwind CSS for modern aesthetics -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti for celebratory success burst -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts for cute, rounded typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .title-font {
+            font-family: 'Fredoka', cursive;
+        }
+
+        /* Floating background elements */
+        .heart-float {
+            position: absolute;
+            animation: floatUp 6s linear infinite;
+            opacity: 0.8;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0.6) rotate(0deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .pulse-heart {
+            animation: heartBeat 1.8s infinite ease-in-out;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .glow-box {
+            box-shadow: 0 10px 30px -5px rgba(244, 114, 182, 0.4);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 relative min-h-screen">
+
+    <!-- Floating Background Hearts Container -->
+    <div id="hearts-container" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- Hidden YouTube Audio Player Container -->
+    <div class="hidden">
+        <div id="youtube-player"></div>
+    </div>
+
+    <!-- Main Apology Card -->
+    <div id="main-card" class="relative z-10 bg-white/90 backdrop-blur-md rounded-3xl glow-box p-6 md:p-10 max-w-md w-full text-center border border-white/60 transition-all duration-500">
+        
+        <!-- Animated Emoji Avatar -->
+        <div class="mb-4 flex justify-center">
+            <div class="w-24 h-24 bg-rose-100 rounded-full flex items-center justify-center text-5xl shadow-inner pulse-heart border-2 border-rose-200">
+                🥺
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="title-font text-3xl md:text-4xl font-bold text-rose-600 mb-2">Sanumma... ❤️</h1>
+        <p class="text-xs text-rose-400 font-semibold mb-6 tracking-wide">PLEASE FORGIVE ME 💬✨</p>
+
+        <!-- Music Control Widget -->
+        <div class="bg-rose-50/90 border border-rose-200 rounded-2xl p-3 mb-6 flex items-center justify-between shadow-sm">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center text-white text-lg shadow-md animate-bounce">
+                    🎵
+                </div>
+                <div class="text-left">
+                    <p class="text-xs font-bold text-rose-800">Ishq Wala Love</p>
+                    <p class="text-[11px] text-gray-500" id="song-status">Tap play to listen together 💕</p>
+                </div>
+            </div>
+            <button id="play-btn" onclick="toggleMusic()" class="bg-rose-500 hover:bg-rose-600 active:scale-95 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center gap-1.5">
+                <span id="play-icon">▶️</span> <span id="play-text">Play Song</span>
+            </button>
+        </div>
+
+        <!-- Personalized Sorry Note -->
+        <div class="bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-2xl p-5 mb-6 text-center shadow-inner relative overflow-hidden">
+            <div class="text-xs font-bold text-rose-500 uppercase tracking-widest mb-2 flex items-center justify-center gap-1">
+                <span>💌</span> Special Message <span>💌</span>
+            </div>
+            <p class="text-rose-950 font-semibold text-lg md:text-xl leading-relaxed title-font my-2">
+                " I am sorry sanummaaaaaaa call eduukkkkk "
+            </p>
+            <div class="text-2xl mt-2 animate-pulse">😭🙏❤️</div>
+        </div>
+
+        <!-- Interactive Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 relative min-h-[90px]">
+            <button id="accept-btn" onclick="acceptApology()" class="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg transform transition hover:scale-105 active:scale-95 flex items-center justify-center gap-2 text-base z-10">
+                <span>💖</span> Okay, I Forgive You!
+            </button>
+            <button id="refuse-btn" onmouseover="dodgeButton()" onclick="dodgeButton()" class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-5 py-3.5 rounded-2xl transition text-xs whitespace-nowrap">
+                Still angry 😤
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Celebration Modal (Shown on Accept) -->
+    <div id="success-card" class="hidden relative z-20 bg-white/95 backdrop-blur-lg rounded-3xl glow-box p-8 max-w-md w-full text-center border border-white/80 animate-fade-in">
+        <div class="text-6xl mb-4 animate-bounce">🥰📞🎉</div>
+        <h2 class="title-font text-3xl font-bold text-rose-600 mb-2">Yay! Thank You Sanumma!</h2>
+        <p class="text-gray-700 mb-6 text-sm md:text-base font-medium">
+            Now please pick up my call right now! I'm waiting for you on the phone! 📱❤️
+        </p>
+        <button onclick="resetPage()" class="bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-6 py-3 rounded-xl transition shadow-md hover:scale-105">
+            Back to note 💌
+        </button>
+    </div>
+
+    <!-- YouTube iFrame API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+        // Generate Floating Hearts Background
+        function createHeart() {
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart-float');
+            const hearts = ['❤️', '💖', '🌸', '✨', '💕', '💗', '🧸'];
+            heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 18 + 14) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+        setInterval(createHeart, 350);
+
+        // YouTube Audio Player Setup
+        let player;
+        let isPlaying = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'fNoV67js4_8', // "Ishq Wala Love"
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'fNoV67js4_8'
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function toggleMusic() {
+            if (!player || !player.playVideo) return;
+
+            const btnText = document.getElementById('play-text');
+            const btnIcon = document.getElementById('play-icon');
+            const status = document.getElementById('song-status');
+
+            if (!isPlaying) {
+                player.playVideo();
+                isPlaying = true;
+                btnText.innerText = "Pause Song";
+                btnIcon.innerText = "⏸️";
+                status.innerText = "Playing 'Ishq Wala Love'... 🎶";
+                status.classList.add("text-rose-600", "font-bold");
+            } else {
+                player.pauseVideo();
+                isPlaying = false;
+                btnText.innerText = "Play Song";
+                btnIcon.innerText = "▶️";
+                status.innerText = "Song paused";
+                status.classList.remove("text-rose-600", "font-bold");
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                document.getElementById('play-text').innerText = "Pause Song";
+                document.getElementById('play-icon').innerText = "⏸️";
+            }
+        }
+
+        // Playful Dodging "Still Angry" Button
+        let dodgeCount = 0;
+        function dodgeButton() {
+            const btn = document.getElementById('refuse-btn');
+            const playfulMessages = [
+                "No choice! 😜",
+                "Call me first! 📞",
+                "Pick the pink button! 👀",
+                "Wrong button! 🙈",
+                "Sanumma please! 🥺"
+            ];
+
+            btn.innerText = playfulMessages[dodgeCount % playfulMessages.length];
+            dodgeCount++;
+
+            // Move around playfully
+            const offsetX = (Math.random() - 0.5) * 160;
+            const offsetY = (Math.random() - 0.5) * 100;
+            btn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }
+
+        // Accept Apology Action
+        function acceptApology() {
+            document.getElementById('main-card').classList.add('hidden');
+            document.getElementById('success-card').classList.remove('hidden');
+
+            // Play music if not already playing
+            if (!isPlaying && player && player.playVideo) {
+                toggleMusic();
+            }
+
+            // Confetti Explosion
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff4b5c', '#ff6b81', '#ff8e9e', '#ffffff']
+            });
+
+            setTimeout(() => {
+                confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } });
+            }, 250);
+        }
+
+        function resetPage() {
+            document.getElementById('success-card').classList.add('hidden');
+            document.getElementById('main-card').classList.remove('hidden');
+            const btn = document.getElementById('refuse-btn');
+            btn.style.transform = 'translate(0px, 0px)';
+            btn.innerText = "Still angry 😤";
+            dodgeCount = 0;
+        }
+    </script>
+</body>
+</html>
